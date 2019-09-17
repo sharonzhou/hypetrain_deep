@@ -10,7 +10,7 @@ from constants import *
 
 class Dataset(BaseDataset):
     def __init__(self, phase, csv_name, is_training, transform_args,
-                 toy, logger, models=["began", "wgan_gp", "progan", "stylegan"]):
+                 toy, logger, models):
         super().__init__(csv_name, is_training, transform_args)
 
         self.phase = phase
@@ -26,13 +26,15 @@ class Dataset(BaseDataset):
 
         if self.toy and self.phase == 'train':
             df = df.sample(frac=0.01, random_state=42)
-        
+
         if self.phase == 'train':
             self.img_paths = self.get_paths(df)
             self.labels = self.get_labels(df)
         else:
             # Evaluation mode
             self.img_paths, self.labels = self.get_expanded(df)
+        
+        print(f'[Loader with models {models}] len df = {len(df)}. len img_paths {len(self.img_paths)}')
 
     def load_df(self, models):
         df = pd.read_csv(self.csv_path)

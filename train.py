@@ -53,13 +53,11 @@ def train(args):
                               data_args=data_args,
                               transform_args=transform_args,
                               is_training=True,
-                              return_info_dict=False,
                               logger=logger)
     valid_loader = get_loader(phase="valid",
                               data_args=data_args,
                               transform_args=transform_args,
                               is_training=False,
-                              return_info_dict=False,
                               logger=logger)
 
     # Instantiate the predictor class for obtaining model predictions.

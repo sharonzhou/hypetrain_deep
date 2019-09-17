@@ -45,6 +45,17 @@ class BaseArgParser(object):
                                  type=str, 
                                  default='began,wgan_gp,progan,stylegan',
                                  help=('Models to use data for.'))
+        self.parser.add_argument('--models_valid',
+                                 dest='data_args.models_valid',
+                                 type=str, 
+                                 default='began,wgan_gp,progan,stylegan',
+                                 help=('Models to use data for - on validation.'))
+        self.parser.add_argument('--models_test',
+                                 dest='data_args.models_test',
+                                 type=str, 
+                                 default='began,wgan_gp,progan,stylegan',
+                                 help=('Models to use data for - on test evaluation.'))
+
         self.parser.add_argument('--num_workers',
                                  dest='data_args.num_workers',
                                  type=int, default=8,
@@ -218,6 +229,12 @@ class BaseArgParser(object):
             args.logger_args.results_dir = results_dir
 
         args.data_args.models = self.args_to_list(args.data_args.models,
-                                             allow_empty=False,
-                                             arg_type=str)
+                                                  allow_empty=False,
+                                                  arg_type=str)
+        args.data_args.models_valid = self.args_to_list(args.data_args.models_valid,
+                                                        allow_empty=False,
+                                                        arg_type=str)
+        args.data_args.models_test = self.args_to_list(args.data_args.models_test,
+                                                       allow_empty=False,
+                                                       arg_type=str)
         return args

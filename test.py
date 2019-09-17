@@ -50,7 +50,6 @@ def test(args):
                         data_args=data_args,
                         transform_args=transform_args,
                         is_training=False,
-                        return_info_dict=False,
                         logger=logger)
     # Obtain model predictions.
     predictions, groundtruth = predictor.predict(loader)
@@ -77,7 +76,6 @@ def test(args):
                             data_args=data_args,
                             transform_args=transform_args,
                             is_training=False,
-                            return_info_dict=False,
                             logger=logger)
         # Obtain model predictions.
         predictions, groundtruth = predictor.predict(loader)

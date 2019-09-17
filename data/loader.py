@@ -5,8 +5,7 @@ from constants import *
 
 
 def get_loader(phase, data_args, transform_args,
-               is_training, return_info_dict,
-               logger=None):
+               is_training, logger=None):
     """Get PyTorch data loader.
 
     Args:
@@ -27,8 +26,22 @@ def get_loader(phase, data_args, transform_args,
                      else data_args.csv_name
 
     # Instantiate the Dataset class.
-    dataset = Dataset(phase, csv_name, is_training, transform_args,
-                      data_args.toy, logger, models=data_args.models)
+    if phase == 'train':
+        models = data_args.models 
+    elif phase == 'valid':
+        models = data_args.models_valid
+    elif phase == 'test':
+        models = data_args.models_test
+    else:
+        print('Erroneous phase')
+        raise
+    dataset = Dataset(phase=phase,
+                      csv_name=csv_name,
+                      is_training=is_training,
+                      transform_args=transform_args,
+                      toy=data_args.toy,
+                      logger=logger,
+                      models=models)
 
     loader = data.DataLoader(dataset,
                              batch_size=data_args.batch_size,
