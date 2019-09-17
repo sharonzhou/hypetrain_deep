@@ -2,10 +2,14 @@
 import sys
 from tensorboardX import SummaryWriter
 import time
+import csv
+
+from constants import *
 
 class Logger(object):
     """Class for logging output."""
-    def __init__(self, log_path, save_dir, results_dir=None):
+    def __init__(self, log_path, save_dir, results_dir=None, results_filename=None,
+                 models=None, models_valid=None, models_test=None, final_csv=False):
         self.log_path = log_path
         self.log_file = log_path.open('w')
 
@@ -14,8 +18,20 @@ class Logger(object):
         
         self.results_dir = results_dir
         if results_dir is not None:
-            self.metrics_path = results_dir / f"scores.txt"
+            if results_filename is None:
+                results_filename = 'scores'
+            self.metrics_path = results_dir / f"{results_filename}.txt"
             self.metrics_file = self.metrics_path.open('a')
+
+        self.models = models
+        self.models_valid = models_valid
+        self.models_test = models_test
+
+        self.final_csv = final_csv
+        if self.final_csv:
+            self.final_csv_path = PROJECT_DIR / f"final_scores.csv"
+            self.final_csv_file = self.final_csv_path.open('a')
+            self.final_csv_writer = csv.writer(self.final_csv_file, delimiter=',', lineterminator='\n')
 
     def log(self, *args):
         self.log_stdout(*args)
@@ -26,6 +42,11 @@ class Logger(object):
         t = time.time()
         if phase is not None:
             msg = f'============{phase} at {t}============'
+            if self.models is not None:
+                if phase == 'valid' and self.models_valid is not None:
+                    msg += f'\ntrained on {self.models}, validated on {self.models_valid}'
+                elif phase == 'test' and self.models_test is not None:
+                    msg += f'\ntrained on {self.models}, tested on {self.models_test}'
         else:
             msg = '=============={t}============='
         if self.results_dir is not None:
@@ -43,6 +64,31 @@ class Logger(object):
                 self.metrics_file.flush()
             else:
                 self.log(f"[{msg}]")
+
+        if self.final_csv and phase == 'test' and self.models is not None and self.models_test is not None:
+            trained_on = ''
+            for m in self.models:
+                if m == 'began':
+                    trained_on += 'b'
+                elif m == 'progan':
+                    trained_on += 'p'
+                elif m == 'wgan_gp':
+                    trained_on += 'w'
+                elif m == 'stylegan':
+                    trained_on += 's'
+            tested_on = ''
+            for m in self.models_test:
+                if m == 'began':
+                    tested_on += 'b'
+                elif m == 'progan':
+                    tested_on += 'p'
+                elif m == 'wgan_gp':
+                    tested_on += 'w'
+                elif m == 'stylegan':
+                    tested_on += 's'
+            row = [t, trained_on, tested_on, metrics['threshold'], metrics['accuracy'], metrics['precision'], metrics['recall'], metrics['f1'], metrics['roc_auc'], metrics['pr_auc'], metrics['log_loss']]
+            self.final_csv_writer.writerow(row)
+            print(f'Appended to {self.final_csv_path}')
 
     def log_stdout(self, *args):
         print(*args, file=sys.stdout)

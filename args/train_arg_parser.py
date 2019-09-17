@@ -59,7 +59,7 @@ class TrainArgParser(BaseArgParser):
         # Training args
         self.parser.add_argument('--num_epochs',
                                  dest='optim_args.num_epochs',
-                                 type=int, default=5,
+                                 type=int, default=0,
                                  help=('Number of epochs to train. If 0, ' +
                                        'train forever.'))
         self.parser.add_argument('--metric_name',

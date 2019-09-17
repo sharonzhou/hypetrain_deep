@@ -18,9 +18,13 @@ def test(args):
     logger_args = args.logger_args
 
     # Get logger.
-    logger = Logger(logger_args.log_path,
-                    logger_args.save_dir,
-                    logger_args.results_dir)
+    logger = Logger(log_path=logger_args.log_path,
+                    save_dir=logger_args.save_dir,
+                    results_dir=logger_args.results_dir,
+                    models=data_args.models,
+                    models_valid=data_args.models_valid,
+                    models_test=data_args.models_test,
+                    final_csv=logger_args.final_csv)
 
     # Load the model at ckpt_path.
     ckpt_path = model_args.ckpt_path
@@ -91,6 +95,21 @@ def test(args):
         # Log metrics to stdout and file.
         logger.log_stdout(f"Writing metrics to {logger.metrics_path}.")
         logger.log_metrics(metrics, phase=phase)
+
+        # Dense test
+        """
+        dense_data_args = data_args
+        dense_data_args.csv_name = f'dense_{phase}.csv'
+        dense_loader = get_loader(phase=phase,
+                                  data_args=data_args,
+                                  transform_args=transform_args,
+                                  is_training=False,
+                                  logger=logger)
+        dense_predictions, dense_groundtruth = predictor.predict(dense_loader)
+        dense_metrics = evaluator.dense_evaluate(dense_groundtruth, dense_predictions)
+        logger.log_stdout(f"Writing metrics to {logger.metrics_path}.")
+        logger.log_metrics(dense_metrics, phase='dense_test')
+        """
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import sklearn.metrics as sk_metrics
 import torch.nn as nn
+from scipy import stats as stats
 
 from aihc_stats import classification_metrics as c_metrics
 from constants import *
@@ -31,6 +32,12 @@ class Evaluator(object):
                                                 )
 
         return {**summary_metrics}
+
+    def dense_evaluate(self, groundtruth, predictions):
+        # Pearson's correlation coefficient r
+        dense_metrics = {}
+        dense_metrics['pearsonr'] = stats.pearsonr(groundtruth, probabilities)
+        return {**dense_metrics}
 
     def get_loss_fn(self, loss_fn_name):
         """Get the loss function used for training.

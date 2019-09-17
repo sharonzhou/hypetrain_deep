@@ -20,8 +20,14 @@ class TestArgParser(BaseArgParser):
                                  action="store_true", default=False,
                                  help=('If true, will save cams to ' +
                                        'experiment_folder/cams'))
+        self.parser.add_argument('--final_csv',
+                                 dest='logger_args.final_csv',
+                                 action='store_true', default=False,
+                                 help='Save scores to final csv.')
 
         # Model args
         self.parser.add_argument('--config_path',
                                  dest='model_args.config_path',
                                  type=str, default=None, help='Configuration for ensemble prediction.')
+
+        
