@@ -1,0 +1,3 @@
+[submodule "aihc_stats"]
+	path = aihc_stats
+	url = git@github.com:stanfordmlgroup/aihc-stats.git
