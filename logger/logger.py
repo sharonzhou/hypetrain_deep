@@ -34,7 +34,7 @@ class Logger(object):
             self.final_csv_writer = csv.writer(self.final_csv_file, delimiter=',', lineterminator='\n')
             
             self.final_csv_abbrev_path = PROJECT_DIR / f"final_scores.csv"
-            self.final_csv_abbrev_file = self.final_csv_abbrev_path.open('w')
+            self.final_csv_abbrev_file = self.final_csv_abbrev_path.open('a')
             self.final_csv_abbrev_writer = csv.writer(self.final_csv_abbrev_file, delimiter=',', lineterminator='\n')
 
             self.final_csv_dense_path = PROJECT_DIR / f"final_dense_scores_all.csv"
@@ -42,7 +42,7 @@ class Logger(object):
             self.final_csv_dense_writer = csv.writer(self.final_csv_dense_file, delimiter=',', lineterminator='\n')
 
             self.final_csv_dense_abbrev_path = PROJECT_DIR / f"final_dense_scores.csv"
-            self.final_csv_dense_abbrev_file = self.final_csv_dense_abbrev_path.open('w')
+            self.final_csv_dense_abbrev_file = self.final_csv_dense_abbrev_path.open('a')
             self.final_csv_dense_abbrev_writer = csv.writer(self.final_csv_dense_abbrev_file, delimiter=',', lineterminator='\n')
 
 
