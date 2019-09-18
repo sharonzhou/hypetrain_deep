@@ -30,6 +30,9 @@ class Dataset(BaseDataset):
         if self.phase == 'train':
             self.img_paths = self.get_paths(df)
             self.labels = self.get_labels(df)
+        elif 'dense' in self.phase:
+            self.img_paths = self.get_dense_paths(df)
+            self.labels = self.get_dense_labels(df)
         else:
             # Evaluation mode
             self.img_paths, self.labels = self.get_expanded(df)
@@ -56,6 +59,12 @@ class Dataset(BaseDataset):
 
     def get_labels(self, df):
         return df['labels'].astype(str) 
+   
+    def get_dense_paths(self, df):
+        return df['path'].values
+
+    def get_dense_labels(self, df):
+        return df['labels'].astype(float).values
  
     def get_image(self, index):
         if self.phase == 'train':

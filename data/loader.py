@@ -28,9 +28,9 @@ def get_loader(phase, data_args, transform_args,
     # Instantiate the Dataset class.
     if phase == 'train':
         models = data_args.models 
-    elif phase == 'valid':
+    elif 'valid' in phase:
         models = data_args.models_valid
-    elif phase == 'test':
+    elif 'test' in phase:
         models = data_args.models_test
     else:
         print('Erroneous phase')

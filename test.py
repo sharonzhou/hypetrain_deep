@@ -97,9 +97,9 @@ def test(args):
         logger.log_metrics(metrics, phase=phase)
 
         # Dense test
-        """
+        phase = 'dense_test'
         dense_data_args = data_args
-        dense_data_args.csv_name = f'dense_{phase}.csv'
+        dense_data_args.csv_name = f'{phase}.csv'
         dense_loader = get_loader(phase=phase,
                                   data_args=data_args,
                                   transform_args=transform_args,
@@ -108,8 +108,7 @@ def test(args):
         dense_predictions, dense_groundtruth = predictor.predict(dense_loader)
         dense_metrics = evaluator.dense_evaluate(dense_groundtruth, dense_predictions)
         logger.log_stdout(f"Writing metrics to {logger.metrics_path}.")
-        logger.log_metrics(dense_metrics, phase='dense_test')
-        """
+        logger.log_metrics(dense_metrics, phase=phase)
 
 
 if __name__ == "__main__":

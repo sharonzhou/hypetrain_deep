@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import sklearn.metrics as sk_metrics
 import torch.nn as nn
-from scipy import stats as stats
+from scipy import stats
 
 from aihc_stats import classification_metrics as c_metrics
 from constants import *
@@ -34,9 +34,15 @@ class Evaluator(object):
         return {**summary_metrics}
 
     def dense_evaluate(self, groundtruth, predictions):
-        # Pearson's correlation coefficient r
+        # Pearson's correlation coefficient r and Spearman's rank order rho
         dense_metrics = {}
-        dense_metrics['pearsonr'] = stats.pearsonr(groundtruth, probabilities)
+        
+        groundtruth = [gt[0] for gt in groundtruth.values]
+        predictions = [pred[0] for pred in predictions.values]
+        
+        dense_metrics['pearsonr'], dense_metrics['pearsonr_pval'] = stats.pearsonr(groundtruth, predictions)
+        dense_metrics['spearmanr'], dense_metrics['spearmanr_pval'] = stats.spearmanr(groundtruth, predictions)
+
         return {**dense_metrics}
 
     def get_loss_fn(self, loss_fn_name):

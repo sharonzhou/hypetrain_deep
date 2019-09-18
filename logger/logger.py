@@ -29,9 +29,22 @@ class Logger(object):
 
         self.final_csv = final_csv
         if self.final_csv:
-            self.final_csv_path = PROJECT_DIR / f"final_scores.csv"
+            self.final_csv_path = PROJECT_DIR / f"final_scores_all.csv"
             self.final_csv_file = self.final_csv_path.open('a')
             self.final_csv_writer = csv.writer(self.final_csv_file, delimiter=',', lineterminator='\n')
+            
+            self.final_csv_abbrev_path = PROJECT_DIR / f"final_scores.csv"
+            self.final_csv_abbrev_file = self.final_csv_abbrev_path.open('w')
+            self.final_csv_abbrev_writer = csv.writer(self.final_csv_abbrev_file, delimiter=',', lineterminator='\n')
+
+            self.final_csv_dense_path = PROJECT_DIR / f"final_dense_scores_all.csv"
+            self.final_csv_dense_file = self.final_csv_dense_path.open('a')
+            self.final_csv_dense_writer = csv.writer(self.final_csv_dense_file, delimiter=',', lineterminator='\n')
+
+            self.final_csv_dense_abbrev_path = PROJECT_DIR / f"final_dense_scores.csv"
+            self.final_csv_dense_abbrev_file = self.final_csv_dense_abbrev_path.open('w')
+            self.final_csv_dense_abbrev_writer = csv.writer(self.final_csv_dense_abbrev_file, delimiter=',', lineterminator='\n')
+
 
     def log(self, *args):
         self.log_stdout(*args)
@@ -65,7 +78,7 @@ class Logger(object):
             else:
                 self.log(f"[{msg}]")
 
-        if self.final_csv and phase == 'test' and self.models is not None and self.models_test is not None:
+        if self.final_csv and 'test' in phase and self.models is not None and self.models_test is not None:
             trained_on = ''
             for m in self.models:
                 if m == 'began':
@@ -86,9 +99,22 @@ class Logger(object):
                     tested_on += 'w'
                 elif m == 'stylegan':
                     tested_on += 's'
-            row = [t, trained_on, tested_on, metrics['threshold'], metrics['accuracy'], metrics['precision'], metrics['recall'], metrics['f1'], metrics['roc_auc'], metrics['pr_auc'], metrics['log_loss']]
-            self.final_csv_writer.writerow(row)
-            print(f'Appended to {self.final_csv_path}')
+            if phase == 'test':
+                row = [t, trained_on, tested_on, metrics['threshold'], metrics['accuracy'], metrics['precision'], metrics['recall'], metrics['f1'], metrics['roc_auc'], metrics['pr_auc'], metrics['log_loss']]
+                self.final_csv_writer.writerow(row)
+                print(f'Appended all metrics to {self.final_csv_path}')
+
+                row_abbrev = [t, trained_on, tested_on, metrics['accuracy']]
+                self.final_csv_abbrev_writer.writerow(row)
+                print(f'Appended salient metrics to {self.final_csv_abbrev_path}')
+            elif phase == 'dense_test':
+                row = [t, trained_on, tested_on, metrics['pearsonr'], metrics['pearsonr_pval'], metrics['spearmanr'], metrics['spearmanr_pval']]
+                self.final_csv_dense_writer.writerow(row)
+                print(f'Appended all dense metrics to {self.final_csv_dense_path}')
+                
+                row_abbrev = [t, trained_on, tested_on, metrics['pearsonr'], metrics['spearmanr']]
+                self.final_csv_dense_abbrev_writer.writerow(row)
+                print(f'Appended salient dense metrics to {self.final_csv_dense_abbrev_path}')
 
     def log_stdout(self, *args):
         print(*args, file=sys.stdout)
