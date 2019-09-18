@@ -8,7 +8,7 @@ from constants import *
 
 class Logger(object):
     """Class for logging output."""
-    def __init__(self, log_path, save_dir, results_dir=None, results_filename=None,
+    def __init__(self, log_path, save_dir, metric_name=None, results_dir=None, results_filename=None,
                  models=None, models_valid=None, models_test=None, final_csv=False):
         self.log_path = log_path
         self.log_file = log_path.open('w')
@@ -26,6 +26,8 @@ class Logger(object):
         self.models = models
         self.models_valid = models_valid
         self.models_test = models_test
+
+        self.metric_name = metric_name
 
         self.final_csv = final_csv
         if self.final_csv:
@@ -78,7 +80,7 @@ class Logger(object):
             else:
                 self.log(f"[{msg}]")
 
-        if self.final_csv and 'test' in phase and self.models is not None and self.models_test is not None:
+        if self.final_csv and 'test' in phase and self.models is not None and self.models_test is not None and self.metric_name is not None:
             trained_on = ''
             for m in self.models:
                 if m == 'began':
@@ -100,19 +102,19 @@ class Logger(object):
                 elif m == 'stylegan':
                     tested_on += 's'
             if phase == 'test':
-                row = [t, trained_on, tested_on, metrics['threshold'], metrics['accuracy'], metrics['precision'], metrics['recall'], metrics['f1'], metrics['roc_auc'], metrics['pr_auc'], metrics['log_loss']]
+                row = [t, trained_on, tested_on, self.metric_name, metrics['threshold'], metrics['accuracy'], metrics['precision'], metrics['recall'], metrics['f1'], metrics['roc_auc'], metrics['pr_auc'], metrics['log_loss']]
                 self.final_csv_writer.writerow(row)
                 print(f'Appended all metrics to {self.final_csv_path}')
 
-                row_abbrev = [t, trained_on, tested_on, metrics['accuracy']]
+                row_abbrev = [t, trained_on, tested_on, self.metric_name, metrics['accuracy']]
                 self.final_csv_abbrev_writer.writerow(row_abbrev)
                 print(f'Appended salient metrics to {self.final_csv_abbrev_path}')
             elif phase == 'dense_test':
-                row = [t, trained_on, tested_on, metrics['pearsonr'], metrics['pearsonr_pval'], metrics['spearmanr'], metrics['spearmanr_pval']]
+                row = [t, trained_on, tested_on, self.metric_name, metrics['pearsonr'], metrics['pearsonr_pval'], metrics['spearmanr'], metrics['spearmanr_pval']]
                 self.final_csv_dense_writer.writerow(row)
                 print(f'Appended all dense metrics to {self.final_csv_dense_path}')
                 
-                row_abbrev = [t, trained_on, tested_on, metrics['pearsonr'], metrics['spearmanr']]
+                row_abbrev = [t, trained_on, tested_on, self.metric_name, metrics['pearsonr'], metrics['spearmanr']]
                 self.final_csv_dense_abbrev_writer.writerow(row_abbrev)
                 print(f'Appended salient dense metrics to {self.final_csv_dense_abbrev_path}')
 

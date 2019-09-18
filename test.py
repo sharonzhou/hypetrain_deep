@@ -20,6 +20,7 @@ def test(args):
     # Get logger.
     logger = Logger(log_path=logger_args.log_path,
                     save_dir=logger_args.save_dir,
+                    metric_name=logger_args.metric_name,
                     results_dir=logger_args.results_dir,
                     models=data_args.models,
                     models_valid=data_args.models_valid,

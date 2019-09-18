@@ -24,6 +24,12 @@ class TestArgParser(BaseArgParser):
                                  dest='logger_args.final_csv',
                                  action='store_true', default=False,
                                  help='Save scores to final csv.')
+        
+        self.parser.add_argument('--metric_name',
+                                 dest='logger_args.metric_name',
+                                 choices=('log_loss', 'auroc', 'accuracy', 'f1', 'precision', 'recall', 'auprc', 'pearsonr', 'spearmanr'),
+                                 required=True,
+                                 help=('Validation metric tthat was used to optimize model.'))
 
         # Model args
         self.parser.add_argument('--config_path',
