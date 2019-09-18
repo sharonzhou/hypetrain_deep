@@ -59,6 +59,11 @@ def train(args):
                               transform_args=transform_args,
                               is_training=False,
                               logger=logger)
+    dense_valid_loader = get_loader(phase="dense_valid",
+                                    data_args=data_args,
+                                    transform_args=transform_args,
+                                    is_training=False,
+                                    logger=logger)
 
     # Instantiate the predictor class for obtaining model predictions.
     predictor = Predictor(model, args.device)
@@ -66,7 +71,6 @@ def train(args):
     # Instantiate the evaluator class for evaluating models.
     # By default, get best performance on validation set.
     evaluator = Evaluator(logger=logger,
-                          phase='valid',
                           tune_threshold=True)
 
     # Instantiate the saver class for saving model checkpoints.
@@ -105,6 +109,13 @@ def train(args):
                 # Only evaluate every iters_per_eval examples.
                 predictions, groundtruth = predictor.predict(valid_loader)
                 metrics = evaluator.evaluate(groundtruth, predictions)
+
+                if optim_args.metric_name in ['pearsonr', 'spearmanr']:
+                    dense_predictions, dense_groundtruth = predictor.predict(dense_valid_loader)
+                    dense_metrics = evaluator.dense_evaluate(dense_groundtruth, dense_predictions)
+                    # Merge the metrics dicts together
+                    metrics = {**metrics, **dense_metrics}
+                
                 # Log metrics to stdout.
                 logger.log_metrics(metrics, phase='train')
 

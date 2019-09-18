@@ -13,13 +13,11 @@ class Evaluator(object):
     binary groundtruth."""
     def __init__(self,
                  logger=None,
-                 phase='valid',
                  threshold=None,
                  tune_threshold=False,
                  **kwargs):
 
         self.logger = logger
-        self.phase = phase
         self.threshold = threshold
         self.tune_threshold = tune_threshold
 

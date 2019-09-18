@@ -60,7 +60,6 @@ def test(args):
 
     # Instantiate the evaluator class for evaluating models.
     evaluator = Evaluator(logger=logger,
-                          phase=phase,
                           tune_threshold=True)
 
     # Get model metrics and curves on the phase dataset.
@@ -86,7 +85,6 @@ def test(args):
 
         # Instantiate the evaluator class for evaluating models.
         evaluator = Evaluator(logger=logger,
-                              phase=phase,
                               threshold=threshold,
                               tune_threshold=False)
 
