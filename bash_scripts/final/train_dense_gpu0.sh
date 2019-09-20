@@ -1,7 +1,7 @@
-SUFFIX="_dense"
-METRIC_NAME="--metric_name pearsonr"
+SUFFIX="_auroc_dense"
+METRIC_NAME="--metric_name auroc_dense"
 GPU_IDS="--gpu_ids 0"
-NUM_EPOCHS="--num_epochs 200"
+NUM_EPOCHS="--num_epochs 150"
 
 B="began"
 P="progan"

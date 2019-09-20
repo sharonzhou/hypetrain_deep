@@ -27,9 +27,9 @@ class TestArgParser(BaseArgParser):
         
         self.parser.add_argument('--metric_name',
                                  dest='logger_args.metric_name',
-                                 choices=('log_loss', 'auroc', 'accuracy', 'f1', 'precision', 'recall', 'auprc', 'pearsonr', 'spearmanr'),
+                                 choices=('log_loss', 'auroc_dense', 'auroc', 'accuracy', 'f1', 'precision', 'recall', 'auprc_dense', 'auprc', 'pearsonr', 'spearmanr'),
                                  required=True,
-                                 help=('Validation metric tthat was used to optimize model.'))
+                                 help=('Validation metric that was used to optimize model.'))
 
         # Model args
         self.parser.add_argument('--config_path',

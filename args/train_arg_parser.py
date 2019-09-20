@@ -64,8 +64,8 @@ class TrainArgParser(BaseArgParser):
                                        'train forever.'))
         self.parser.add_argument('--metric_name',
                                  dest='optim_args.metric_name',
-                                 choices=('log_loss', 'auroc', 'accuracy', 'f1', 'precision', 'recall', 'auprc', 'pearsonr', 'spearmanr'),
-                                 default='accuracy',
+                                 choices=('log_loss', 'auroc_dense', 'auroc', 'accuracy', 'f1', 'precision', 'recall', 'auprc_dense', 'auprc', 'pearsonr', 'spearmanr'),
+                                 default='auroc_dense',
                                  help=('Validation metric to optimize.'))
         # Optimizer
         self.parser.add_argument('--optimizer',

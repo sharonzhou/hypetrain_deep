@@ -110,11 +110,11 @@ def train(args):
                 predictions, groundtruth = predictor.predict(valid_loader)
                 metrics = evaluator.evaluate(groundtruth, predictions)
 
-                if optim_args.metric_name in ['pearsonr', 'spearmanr']:
-                    dense_predictions, dense_groundtruth = predictor.predict(dense_valid_loader)
-                    dense_metrics = evaluator.dense_evaluate(dense_groundtruth, dense_predictions)
-                    # Merge the metrics dicts together
-                    metrics = {**metrics, **dense_metrics}
+                # Evaluate on dense dataset
+                dense_predictions, dense_groundtruth = predictor.predict(dense_valid_loader)
+                dense_metrics = evaluator.dense_evaluate(dense_groundtruth, dense_predictions)
+                # Merge the metrics dicts together
+                metrics = {**metrics, **dense_metrics}
                 
                 # Log metrics to stdout.
                 logger.log_metrics(metrics, phase='train')

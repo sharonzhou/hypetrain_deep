@@ -204,7 +204,7 @@ class BaseArgParser(object):
 
             if 'loss' in args.optim_args.metric_name:
                 args.optim_args.maximize_metric = False
-            elif args.optim_args.metric_name in ['accuracy', 'auroc', 'auprc', 'pearsonr', 'spearmanr', 'precision', 'recall', 'f1']:
+            elif args.optim_args.metric_name in ['accuracy', 'auroc_dense', 'auroc', 'auprc_dense', 'auprc', 'pearsonr', 'spearmanr', 'precision', 'recall', 'f1']:
                 args.optim_args.maximize_metric = True
             else:
                 raise ValueError(f"metric {args.optim_args.metric_name} " + 

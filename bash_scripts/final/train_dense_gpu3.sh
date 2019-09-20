@@ -1,7 +1,7 @@
-SUFFIX="_dense"
-METRIC_NAME="--metric_name pearsonr"
+SUFFIX="_auroc_dense"
+METRIC_NAME="--metric_name auroc_dense"
 GPU_IDS="--gpu_ids 3"
-NUM_EPOCHS="--num_epochs 200"
+NUM_EPOCHS="--num_epochs 150"
 
 B="began"
 P="progan"
@@ -26,5 +26,4 @@ BPWS="began,progan,wgan_gp,stylegan"
 python train.py --experiment_name pw$SUFFIX --models $PW --models_valid $PW $GPU_IDS $NUM_EPOCHS $METRIC_NAME
 python train.py --experiment_name bps$SUFFIX --models $BPS --models_valid $BPS $GPU_IDS $NUM_EPOCHS $METRIC_NAME
 python train.py --experiment_name bpws$SUFFIX --models $BPWS --models_valid $BPWS $GPU_IDS $NUM_EPOCHS $METRIC_NAME
-python train.py --experiment_name s$SUFFIX --models $S --models_valid $S $GPU_IDS $NUM_EPOCHS $METRIC_NAME
 
