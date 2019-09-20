@@ -55,10 +55,10 @@ do
     do
         echo "Evaluating $METRIC_NAME $j"
 
-        #python test.py --ckpt_path "${paths[$j]}" --models "$j" --models_valid "$j" --models_test $B --final_csv --metric_name $METRIC_NAME
-        #python test.py --ckpt_path "${paths[$j]}" --models "$j" --models_valid "$j" --models_test $P --final_csv --metric_name $METRIC_NAME
-        #python test.py --ckpt_path "${paths[$j]}" --models "$j" --models_valid "$j" --models_test $W --final_csv --metric_name $METRIC_NAME
-        #python test.py --ckpt_path "${paths[$j]}" --models "$j" --models_valid "$j" --models_test $S --final_csv --metric_name $METRIC_NAME
+        python test.py --ckpt_path "${paths[$j]}" --models "$j" --models_valid "$j" --models_test $B --final_csv --metric_name $METRIC_NAME
+        python test.py --ckpt_path "${paths[$j]}" --models "$j" --models_valid "$j" --models_test $P --final_csv --metric_name $METRIC_NAME
+        python test.py --ckpt_path "${paths[$j]}" --models "$j" --models_valid "$j" --models_test $W --final_csv --metric_name $METRIC_NAME
+        python test.py --ckpt_path "${paths[$j]}" --models "$j" --models_valid "$j" --models_test $S --final_csv --metric_name $METRIC_NAME
 
     done
 done
