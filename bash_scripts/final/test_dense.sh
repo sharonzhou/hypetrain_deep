@@ -27,7 +27,7 @@ do
     METRIC_NAME="$i"
 
     # Trained on 1
-    B_PATH="/deep/group/sharonz/hypetrain_deep/saved_models/b$SUFFIX/best.pth.tar"
+    #B_PATH="/deep/group/sharonz/hypetrain_deep/saved_models/b$SUFFIX/best.pth.tar"
     P_PATH="/deep/group/sharonz/hypetrain_deep/saved_models/p$SUFFIX/best.pth.tar"
     W_PATH="/deep/group/sharonz/hypetrain_deep/saved_models/w$SUFFIX/best.pth.tar"
     S_PATH="/deep/group/sharonz/hypetrain_deep/saved_models/s$SUFFIX/best.pth.tar"

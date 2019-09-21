@@ -44,8 +44,14 @@ class Evaluator(object):
 
         # AUROC on majority vote on groundtruth (binarized): auroc_dense
         binarized_groundtruth = np.array(groundtruth) > 0.5
-        dense_metrics['auroc_dense'] = skm.roc_auc_score(binarized_groundtruth, predictions) 
-        dense_metrics['auprc_dense'] = skm.average_precision_score(binarized_groundtruth, predictions) 
+        try:
+            dense_metrics['auroc_dense'] = skm.roc_auc_score(binarized_groundtruth, predictions) 
+        except ValueError:
+            dense_metrics['auroc_dense'] = 0.
+        try:
+            dense_metrics['auprc_dense'] = skm.average_precision_score(binarized_groundtruth, predictions) 
+        except ValueError:
+            dense_metrics['auprc_dense'] = 0.
 
         return {**dense_metrics}
 

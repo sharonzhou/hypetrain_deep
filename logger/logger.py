@@ -110,11 +110,11 @@ class Logger(object):
                 self.final_csv_abbrev_writer.writerow(row_abbrev)
                 print(f'Appended salient metrics to {self.final_csv_abbrev_path}')
             elif phase == 'dense_test':
-                row = [t, trained_on, tested_on, self.metric_name, metrics['pearsonr'], metrics['pearsonr_pval'], metrics['spearmanr'], metrics['spearmanr_pval']]
+                row = [t, trained_on, tested_on, self.metric_name, metrics['auroc_dense'], metrics['auprc_dense'], metrics['pearsonr'], metrics['pearsonr_pval'], metrics['spearmanr'], metrics['spearmanr_pval']]
                 self.final_csv_dense_writer.writerow(row)
                 print(f'Appended all dense metrics to {self.final_csv_dense_path}')
                 
-                row_abbrev = [t, trained_on, tested_on, self.metric_name, metrics['pearsonr'], metrics['spearmanr']]
+                row_abbrev = [t, trained_on, tested_on, self.metric_name, metrics['auroc_dense'], metrics['auprc_dense'], metrics['pearsonr'], metrics['spearmanr']]
                 self.final_csv_dense_abbrev_writer.writerow(row_abbrev)
                 print(f'Appended salient dense metrics to {self.final_csv_dense_abbrev_path}')
 
