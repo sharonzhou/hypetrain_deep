@@ -23,6 +23,11 @@ class TrainArgParser(BaseArgParser):
         self.parser.add_argument('--no-pretrained', dest='model_args.pretrained',
                                  action="store_false",
                                  help='Use a pretrained network.')
+        self.parser.add_argument('--ckpt_path',
+                                 dest='model_args.ckpt_path',
+                                 type=str, default=None,
+                                 help=('Checkpoint path for tuning. ' +
+                                       'If None, start from scratch.'))
 
         # Logger args
         self.parser.add_argument('--experiment_name',
@@ -65,7 +70,7 @@ class TrainArgParser(BaseArgParser):
         self.parser.add_argument('--metric_name',
                                  dest='optim_args.metric_name',
                                  choices=('log_loss', 'auroc_dense', 'auroc', 'accuracy', 'f1', 'precision', 'recall', 'auprc_dense', 'auprc', 'pearsonr', 'spearmanr'),
-                                 default='auroc_dense',
+                                 default='auprc_dense',
                                  help=('Validation metric to optimize.'))
         # Optimizer
         self.parser.add_argument('--optimizer',

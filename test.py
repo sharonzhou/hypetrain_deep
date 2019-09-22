@@ -12,40 +12,34 @@ from constants import *
 
 def test(args):
     """Run model testing."""
-
-    model_args = args.model_args
-    data_args = args.data_args
+    test_args = args.test_args
     logger_args = args.logger_args
-
-    # Get logger.
-    logger = Logger(log_path=logger_args.log_path,
-                    save_dir=logger_args.save_dir,
-                    metric_name=logger_args.metric_name,
-                    results_dir=logger_args.results_dir,
-                    models=data_args.models,
-                    models_valid=data_args.models_valid,
-                    models_test=data_args.models_test,
-                    final_csv=logger_args.final_csv)
-
+    
     # Load the model at ckpt_path.
-    ckpt_path = model_args.ckpt_path
+    ckpt_path = test_args.ckpt_path
     ckpt_save_dir = Path(ckpt_path).parent
+
     # Get model args from checkpoint and add them to
     # command-line specified model args.
-    model_args, transform_args\
-        = ModelSaver.get_args(cl_model_args=model_args,
+    model_args, data_args, optim_args, logger_args\
+        = ModelSaver.get_args(cl_logger_args=logger_args,
                               ckpt_save_dir=ckpt_save_dir)
 
     model, ckpt_info = ModelSaver.load_model(ckpt_path=ckpt_path,
                                              gpu_ids=args.gpu_ids,
                                              model_args=model_args,
                                              is_training=False)
+
+
+    # Get logger.
+    logger = Logger(logger_args, optim_args, test_args)
+    
     # Instantiate the Predictor class for obtaining model predictions.
     predictor = Predictor(model=model, device=args.device)
 
-    phase = data_args.phase
+    phase = test_args.phase
     is_test = False
-    if data_args.phase == 'test':
+    if phase == 'test':
         is_test = True
         phase = 'valid' # Run valid first to get threshold
 

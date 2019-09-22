@@ -24,7 +24,7 @@ def train(args):
     transform_args = args.transform_args
 
     # Get logger.
-    logger = Logger(logger_args.log_path, logger_args.save_dir)
+    logger = Logger(logger_args)
 
     if model_args.ckpt_path:
         # CL-specified args are used to load the model, rather than the
@@ -46,7 +46,6 @@ def train(args):
     # Put model on gpu or cpu and put into training mode.
     model = model.to(args.device)
     model.train()
-
 
     # Get train and valid loader objects.
     train_loader = get_loader(phase="train",
@@ -117,7 +116,10 @@ def train(args):
                 metrics = {**metrics, **dense_metrics}
                 
                 # Log metrics to stdout.
-                logger.log_metrics(metrics, phase='train')
+                logger.log_metrics(metrics, phase='valid')
+                
+                # Log to tb
+                logger.log_scalars(metrics, optimizer.global_step, phase='valid')
 
                 if optimizer.global_step % logger_args.iters_per_save == 0:
                     # Only save every iters_per_save examples directly

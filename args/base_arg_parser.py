@@ -55,18 +55,10 @@ class BaseArgParser(object):
                                  type=str, 
                                  default='began,wgan_gp,progan,stylegan',
                                  help=('Models to use data for - on test evaluation.'))
-
         self.parser.add_argument('--num_workers',
                                  dest='data_args.num_workers',
                                  type=int, default=8,
                                  help='Number of threads for the DataLoader.')
-
-        # Model args
-        self.parser.add_argument('--ckpt_path',
-                                 dest='model_args.ckpt_path',
-                                 type=str, default=None,
-                                 help=('Checkpoint path for tuning. ' +
-                                       'If None, start from scratch.'))
 
         # Run args
         self.parser.add_argument('--gpu_ids',
@@ -147,35 +139,28 @@ class BaseArgParser(object):
                 args.logger_args.experiment_name
             args_save_dir = save_dir
 
+            tb_dir = PROJECT_DIR / "tb" / args.logger_args.experiment_name
+
         else:
-            if ((args.model_args.config_path is None)
-                    and (args.model_args.ckpt_path is None)):
-                raise ArgumentError("Must pass in a configuration file or " +
-                                    "ckpt path during testing.")
 
-            if ((args.model_args.config_path is not None)
-                    and (args.model_args.ckpt_path is not None)):
-                print("Provided config path and ckpt path. Using config path.")
-                args.model_args.ckpt_path = None
+            log_name = f"{args.test_args.phase}_log.txt"
 
-            log_name = f"{args.data_args.phase}_log.txt"
-
-            if args.model_args.config_path is not None:
-                # Obtain save dir from config path name.
-                config_path = Path(args.model_args.config_path)
-                save_dir = Path(args.logger_args.save_dir) / config_path.stem
-                args.logger_args.experiment_name = config_path.stem
-
-            else:
-                # Obtain save dir from ckpt path.
-                save_dir = Path(args.model_args.ckpt_path).parent
-                args.logger_args.experiment_name = save_dir.name
+            # Obtain save dir from ckpt path.
+            save_dir = Path(args.test_args.ckpt_path).parent
+            args.logger_args.experiment_name = save_dir.name
 
             # Make directory to save results.
-            results_dir = save_dir / "results" / args.data_args.phase
+            results_dir = save_dir / "results" / args.test_args.phase
             results_dir.mkdir(parents=True, exist_ok=True)
+            args.logger_args.results_dir = str(results_dir)
 
             args_save_dir = results_dir
+            
+            tb_name = args.logger_args.experiment_name + '-' + args.test_args.phase
+            tb_dir = PROJECT_DIR / "tb" / tb_name
+
+        tb_dir.mkdir(parents=True, exist_ok=True)
+        args.logger_args.tb_dir = str(tb_dir)
 
         # Create the model save directory.
         save_dir.mkdir(parents=True, exist_ok=True)
@@ -223,11 +208,8 @@ class BaseArgParser(object):
             args.device = 'cuda'
         else:
             args.device = 'cpu'
-
-        # Set up output dir (test mode only)
-        if not self.is_training:
-            args.logger_args.results_dir = results_dir
-
+        
+        # Listify models to train, val, test on
         args.data_args.models = self.args_to_list(args.data_args.models,
                                                   allow_empty=False,
                                                   arg_type=str)

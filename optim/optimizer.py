@@ -134,7 +134,7 @@ class Optimizer(object):
         self.iter = 0
         self.logger.log(f'[start of epoch {self.epoch}]')
 
-    def end_epoch(self, metrics):
+    def end_epoch(self, metrics, phase='valid'):
         epoch_time = time() - self.epoch_start_time
         lr = self.optimizer.param_groups[0]['lr']
         self.logger.log(f'[end of epoch {self.epoch}, epoch time: ' +
@@ -142,6 +142,7 @@ class Optimizer(object):
         
         self.logger.log_scalars(metrics,
                                 self.global_step,
+                                phase=phase,
                                 print_to_stdout=True)
 
         self.epoch += 1
@@ -164,7 +165,7 @@ class Optimizer(object):
     def state_dict(self):
         return self.optimizer.state_dict()
 
-    def log_iter(self, inputs, logits, targets, unweighted_loss):
+    def log_iter(self, inputs, logits, targets, unweighted_loss, phase='train'):
         """Log results from a training iteration."""
         loss = unweighted_loss.item()
 
@@ -184,9 +185,11 @@ class Optimizer(object):
             batch_lr = self.optimizer.param_groups[0]['lr']
             self.logger.log_scalars({'batch_lr': batch_lr},
                                     self.global_step,
+                                    phase=phase,
                                     print_to_stdout=False)
             self.logger.log_scalars({'batch_loss': self.loss_meter.avg},
                                     self.global_step,
+                                    phase=phase,
                                     print_to_stdout=False)
             self.loss_meter.reset()
 

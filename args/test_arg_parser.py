@@ -8,32 +8,16 @@ class TestArgParser(BaseArgParser):
         super(TestArgParser, self).__init__()
         self.is_training = False
 
-        # Data args
+        # Test args
         self.parser.add_argument('--phase',
-                                 dest='data_args.phase',
+                                 dest='test_args.phase',
                                  type=str, default='test',
                                  choices=('train', 'valid', 'test'))
-
-        # Logger args
-        self.parser.add_argument('--save_cams',
-                                 dest='logger_args.save_cams',
-                                 action="store_true", default=False,
-                                 help=('If true, will save cams to ' +
-                                       'experiment_folder/cams'))
         self.parser.add_argument('--final_csv',
-                                 dest='logger_args.final_csv',
+                                 dest='test_args.final_csv',
                                  action='store_true', default=False,
                                  help='Save scores to final csv.')
-        
-        self.parser.add_argument('--metric_name',
-                                 dest='logger_args.metric_name',
-                                 choices=('log_loss', 'auroc_dense', 'auroc', 'accuracy', 'f1', 'precision', 'recall', 'auprc_dense', 'auprc', 'pearsonr', 'spearmanr'),
-                                 required=True,
-                                 help=('Validation metric that was used to optimize model.'))
-
-        # Model args
-        self.parser.add_argument('--config_path',
-                                 dest='model_args.config_path',
-                                 type=str, default=None, help='Configuration for ensemble prediction.')
-
-        
+        self.parser.add_argument('--ckpt_path',
+                                 dest='test_args.ckpt_path',
+                                 type=str, required=True,
+                                 help='Checkpoint path for tuning.')

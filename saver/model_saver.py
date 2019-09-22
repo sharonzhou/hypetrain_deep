@@ -129,21 +129,25 @@ class ModelSaver(object):
         # Delete ckpt_path used to instantiate the model during training
         # so that it does not overwrite the ckpt_path provided during testing.
         del ckpt_model_args['ckpt_path']     
-        ckpt_transform_args = ckpt_args['transform_args']
+        ckpt_data_args = ckpt_args['data_args']
+        ckpt_optim_args = ckpt_args['optim_args']
+        ckpt_logger_args = ckpt_args['logger_args']
 
         return (Namespace(**ckpt_model_args),
-                Namespace(**ckpt_transform_args))
+                Namespace(**ckpt_optim_args),
+                Namespace(**ckpt_data_args),
+                Namespace(**ckpt_logger_args))
 
     @classmethod
-    def get_args(cls, cl_model_args, ckpt_save_dir):
+    def get_args(cls, cl_logger_args, ckpt_save_dir):
         """Read args from ckpt_save_dir and make a new namespace combined with
         model_args from the command line."""
-        model_args = copy.deepcopy(cl_model_args)
-        ckpt_model_args, ckpt_transform_args =\
+        logger_args = copy.deepcopy(cl_logger_args)
+        ckpt_model_args, ckpt_data_args, ckpt_optim_args, ckpt_logger_args =\
             cls.load_ckpt_args(ckpt_save_dir)
-        model_args.__dict__.update(ckpt_model_args.__dict__)
+        logger_args.__dict__.update(ckpt_logger_args.__dict__)
 
-        return model_args, ckpt_transform_args
+        return ckpt_model_args, ckpt_data_args, ckpt_optim_args, logger_args
 
     @classmethod
     def load_model(cls, ckpt_path, gpu_ids, model_args,

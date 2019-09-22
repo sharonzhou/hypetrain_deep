@@ -2,10 +2,10 @@ import csv
 import pandas as pd
 
 filenames = { 
-        #'final_scores.csv':5,
-        #'final_scores_all.csv':12, 
-        'final_dense_scores.csv':8,
-        'final_dense_scores_all.csv':10
+        'final_scores.csv':6,
+        'final_scores_all.csv':13, 
+        'final_dense_scores.csv':9,
+        'final_dense_scores_all.csv':11
         }
 
 for filename, row_len in filenames.items():
@@ -14,11 +14,11 @@ for filename, row_len in filenames.items():
         new_rows = []
         for i, row in enumerate(reader):
             if i == 0:
-                header = row
+                header = row[:4] + ['pretrained'] + row[4:]
                 continue
             if len(row) < row_len:
-                # Add the tuned_on param - which is after ts, trained_on, tested_on, so index 3
-                new_row = row[:4] + [""] + [""] + row[4:] 
+                # Add the pretrained param - which is after ts, trained_on, tested_on, tuned_on so index 4
+                new_row = row[:4] + ["False"] + row[4:] 
                 print(new_row)
             else:
                 new_row = row
