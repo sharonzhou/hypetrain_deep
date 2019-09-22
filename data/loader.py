@@ -4,14 +4,13 @@ from .dataset import Dataset
 from constants import *
 
 
-def get_loader(phase, data_args, transform_args,
+def get_loader(phase, data_args,
                is_training, logger=None):
     """Get PyTorch data loader.
 
     Args:
         phase: string name of training phase {train, valid, test}.
         data_args: Namespace of data arguments.
-        transform_args: Namespace of transform arguments.
         is_training: Bool indicating whether in training mode.
         return_info_dict: Bool indicating whether to return extra info
                           in batches.
@@ -38,7 +37,6 @@ def get_loader(phase, data_args, transform_args,
     dataset = Dataset(phase=phase,
                       csv_name=csv_name,
                       is_training=is_training,
-                      transform_args=transform_args,
                       toy=data_args.toy,
                       logger=logger,
                       models=models)

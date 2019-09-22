@@ -32,7 +32,7 @@ class Logger(object):
         self.metric_name = optim_args.metric_name if optim_args is not None else None
     
         # Test args
-        self.final_csv = test_args['final_csv'] if test_args is not None else False
+        self.final_csv = test_args.final_csv if test_args is not None else False
         if self.final_csv:
             self.final_csv_path = PROJECT_DIR / f"final_scores_all.csv"
             self.final_csv_file = self.final_csv_path.open('a')

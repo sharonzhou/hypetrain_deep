@@ -132,10 +132,9 @@ class ModelSaver(object):
         ckpt_data_args = ckpt_args['data_args']
         ckpt_optim_args = ckpt_args['optim_args']
         ckpt_logger_args = ckpt_args['logger_args']
-
         return (Namespace(**ckpt_model_args),
-                Namespace(**ckpt_optim_args),
                 Namespace(**ckpt_data_args),
+                Namespace(**ckpt_optim_args),
                 Namespace(**ckpt_logger_args))
 
     @classmethod
@@ -146,6 +145,13 @@ class ModelSaver(object):
         ckpt_model_args, ckpt_data_args, ckpt_optim_args, ckpt_logger_args =\
             cls.load_ckpt_args(ckpt_save_dir)
         logger_args.__dict__.update(ckpt_logger_args.__dict__)
+        
+        if 'models' in ckpt_data_args:
+            ckpt_data_args.models = [d for d in ckpt_data_args.models.split(',')]
+        if 'models_valid' in ckpt_data_args:
+            ckpt_data_args.models_valid = [d for d in ckpt_data_args.models_valid.split(',')]
+        if 'models_test' in ckpt_data_args:
+            ckpt_data_args.models_test = [d for d in ckpt_data_args.models_test.split(',')]
 
         return ckpt_model_args, ckpt_data_args, ckpt_optim_args, logger_args
 

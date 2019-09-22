@@ -32,7 +32,10 @@ def test(args):
 
 
     # Get logger.
-    logger = Logger(logger_args, optim_args, test_args)
+    logger = Logger(logger_args=logger_args,
+                    data_args=data_args,
+                    optim_args=optim_args,
+                    test_args=test_args)
     
     # Instantiate the Predictor class for obtaining model predictions.
     predictor = Predictor(model=model, device=args.device)
@@ -47,7 +50,6 @@ def test(args):
     # Get phase loader object.
     loader = get_loader(phase=phase,
                         data_args=data_args,
-                        transform_args=transform_args,
                         is_training=False,
                         logger=logger)
     # Obtain model predictions.
@@ -72,7 +74,6 @@ def test(args):
         # Get phase loader object.
         loader = get_loader(phase=phase,
                             data_args=data_args,
-                            transform_args=transform_args,
                             is_training=False,
                             logger=logger)
         # Obtain model predictions.
@@ -95,7 +96,6 @@ def test(args):
         dense_data_args.csv_name = f'{phase}.csv'
         dense_loader = get_loader(phase=phase,
                                   data_args=data_args,
-                                  transform_args=transform_args,
                                   is_training=False,
                                   logger=logger)
         dense_predictions, dense_groundtruth = predictor.predict(dense_loader)

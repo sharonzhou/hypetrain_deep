@@ -21,7 +21,6 @@ def train(args):
     logger_args = args.logger_args
     optim_args = args.optim_args
     data_args = args.data_args
-    transform_args = args.transform_args
 
     # Get logger.
     logger = Logger(logger_args)
@@ -50,17 +49,14 @@ def train(args):
     # Get train and valid loader objects.
     train_loader = get_loader(phase="train",
                               data_args=data_args,
-                              transform_args=transform_args,
                               is_training=True,
                               logger=logger)
     valid_loader = get_loader(phase="valid",
                               data_args=data_args,
-                              transform_args=transform_args,
                               is_training=False,
                               logger=logger)
     dense_valid_loader = get_loader(phase="dense_valid",
                                     data_args=data_args,
-                                    transform_args=transform_args,
                                     is_training=False,
                                     logger=logger)
 

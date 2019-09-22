@@ -6,11 +6,12 @@ from constants import *
 
 
 class BaseDataset(Dataset):
-    def __init__(self, csv_name, is_training, transform_args):
+    def __init__(self, csv_name, is_training):
         self.csv_name = f"{csv_name}.csv" if not csv_name.endswith(".csv") else csv_name
         self.is_training = is_training
+        self.transform = t.Compose([t.ToTensor()])
 
-        self._set_transforms(transform_args)
+        #self._set_transforms(transform_args)
 
     def _set_transforms(self, transform_args):
         """Set the transforms to be applied when loading."""

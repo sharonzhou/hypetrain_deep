@@ -9,9 +9,9 @@ from constants import *
 
 
 class Dataset(BaseDataset):
-    def __init__(self, phase, csv_name, is_training, transform_args,
+    def __init__(self, phase, csv_name, is_training,
                  toy, logger, models):
-        super().__init__(csv_name, is_training, transform_args)
+        super().__init__(csv_name, is_training)
 
         self.phase = phase
 
@@ -68,13 +68,13 @@ class Dataset(BaseDataset):
  
     def get_image(self, index):
         if self.phase == 'train':
-            # Get and transform the label
+            # Get the label
             labels = self.labels.iloc[index]
 
             # Select random label out of all labels
             label = int(random.choice(labels))
             
-            # Get and transform the image
+            # Get the image
             img_path = self.img_paths.iloc[index]
         else:
             label = self.labels[index]
