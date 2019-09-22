@@ -26,12 +26,12 @@ class Logger(object):
         # Data args
         self.models = data_args.models if data_args is not None else None
         self.models_valid = data_args.models_valid if data_args is not None else None
-        self.models_test = data_args.models_test if data_args is not None else None
 
         # Optim args
         self.metric_name = optim_args.metric_name if optim_args is not None else None
     
         # Test args
+        self.models_test = test_args.models_test if test_args is not None else None
         self.final_csv = test_args.final_csv if test_args is not None else False
         if self.final_csv:
             self.final_csv_path = PROJECT_DIR / f"final_scores_all.csv"

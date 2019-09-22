@@ -29,8 +29,7 @@ def test(args):
                                              gpu_ids=args.gpu_ids,
                                              model_args=model_args,
                                              is_training=False)
-
-
+    
     # Get logger.
     logger = Logger(logger_args=logger_args,
                     data_args=data_args,

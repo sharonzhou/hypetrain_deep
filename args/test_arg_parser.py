@@ -21,3 +21,8 @@ class TestArgParser(BaseArgParser):
                                  dest='test_args.ckpt_path',
                                  type=str, required=True,
                                  help='Checkpoint path for tuning.')
+        self.parser.add_argument('--models_test',
+                                 dest='test_args.models_test',
+                                 type=str,
+                                 required=True,
+                                 help=('Models to use data for - on test evaluation.'))
