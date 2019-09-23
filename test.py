@@ -60,20 +60,35 @@ def test(args):
 
     # Get model metrics and curves on the phase dataset.
     metrics = evaluator.evaluate(groundtruth, predictions)
-    
+        
     # Log metrics to stdout and file.
     logger.log_stdout(f"Writing metrics to {logger.metrics_path}.")
     logger.log_metrics(metrics, phase=phase)
+    
+    # Evaluate dense to get back thresholds
+    dense_loader = get_loader(phase=phase,
+                              data_args=data_args,
+                              is_training=False,
+                              logger=logger)
+    dense_predictions, dense_groundtruth = predictor.predict(dense_loader)
+    dense_metrics = evaluator.dense_evaluate(dense_groundtruth,
+                                             dense_predictions)
+    
+    # Log metrics to stdout and file.
+    logger.log_stdout(f"Writing metrics to {logger.metrics_path}.")
+    logger.log_metrics(dense_metrics, phase=phase)
+    
 
     if is_test:
         phase = 'test'
         threshold = metrics['threshold']
         print(f"======================{phase}=======================")
-
+        
         # Get phase loader object.
         loader = get_loader(phase=phase,
                             data_args=data_args,
                             is_training=False,
+                            test_args=test_args,
                             logger=logger)
         # Obtain model predictions.
         predictions, groundtruth = predictor.predict(loader)
@@ -91,14 +106,18 @@ def test(args):
 
         # Dense test
         phase = 'dense_test'
-        dense_data_args = data_args
-        dense_data_args.csv_name = f'{phase}.csv'
         dense_loader = get_loader(phase=phase,
                                   data_args=data_args,
                                   is_training=False,
+                                  test_args=test_args,
                                   logger=logger)
+        threshold_dense = dense_metrics["threshold_dense"]
+        threshold_tunef1_dense = dense_metrics["threshold_tunef1_dense"]
         dense_predictions, dense_groundtruth = predictor.predict(dense_loader)
-        dense_metrics = evaluator.dense_evaluate(dense_groundtruth, dense_predictions)
+        dense_metrics = evaluator.dense_evaluate(dense_groundtruth,
+                                                 dense_predictions,
+                                                 threshold=threshold_dense,
+                                                 threshold_tunef1=threshold_tunef1_dense)
         logger.log_stdout(f"Writing metrics to {logger.metrics_path}.")
         logger.log_metrics(dense_metrics, phase=phase)
 

@@ -32,7 +32,41 @@ class Evaluator(object):
 
         return {**summary_metrics}
 
-    def dense_evaluate(self, groundtruth, predictions):
+    def dense_evaluate(self, groundtruth, predictions, threshold=None, threshold_tunef1=None):
+
+        def get_optimal_f1(groundtruth, probabilities,
+                           return_threshold=False):
+            """Get threshold maximizing f1 score."""
+            prec, rec, threshold =\
+                skm.precision_recall_curve(groundtruth,
+                                           probabilities)
+
+            f1_values = 2 * (prec * rec) / (prec + rec)
+
+            argmax_f1 = np.nanargmax(f1_values)
+            max_f1 = np.nanmax(f1_values)
+
+            if return_threshold:
+                return max_f1, threshold[argmax_f1]
+            else:
+                return max_f1
+
+
+        def get_optimal_youdensj(groundtruth, probabilities,
+                                 return_threshold=False):
+            """Get threshold maximizing sensitivity + specificity."""
+            fpr, tpr, threshold = skm.roc_curve(groundtruth, probabilities)
+
+            youdens_j_values = tpr + 1 - fpr
+
+            argmax_youdens_j = np.argmax(youdens_j_values)
+            max_youdens_j = np.max(youdens_j_values)
+
+            if return_threshold:
+                return max_youdens_j, threshold[argmax_youdens_j]
+            else:
+                return max_youdens_j
+
         # Pearson's correlation coefficient r and Spearman's rank order rho
         dense_metrics = {}
         
@@ -53,6 +87,24 @@ class Evaluator(object):
         except ValueError:
             dense_metrics['auprc_dense'] = 0.
 
+        # Accuracy and getting optimal threshold
+        if threshold is None:
+            dense_metrics['accuracy_dense'], dense_metrics['threshold_dense'] = get_optimal_youdensj(binarized_groundtruth, 
+                                                                                                     predictions,
+                                                                                                     return_threshold=True) 
+            dense_metrics['accuracy_tunef1_dense'], dense_metrics['threshold_tunef1_dense'] = get_optimal_f1(
+                                                                                                binarized_groundtruth, 
+                                                                                                predictions,
+                                                                                                return_threshold=True) 
+        else:
+            binarized_predictions = predictions > threshold
+            dense_metrics['accuracy_dense'] = skm.accuracy_score(binarized_groundtruth,
+                                                                 binarized_predictions)
+
+            binarized_predictions_tunef1 = predictions > threshold_tunef1
+            dense_metrics['accuracy_tunef1_dense'] = skm.accuracy_score(binarized_groundtruth,
+                                                                        binarized_predictions_tunef1)
+            
         return {**dense_metrics}
 
     def get_loss_fn(self, loss_fn_name):

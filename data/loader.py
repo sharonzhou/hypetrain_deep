@@ -4,8 +4,7 @@ from .dataset import Dataset
 from constants import *
 
 
-def get_loader(phase, data_args,
-               is_training, logger=None):
+def get_loader(phase, data_args, is_training, test_args=None, logger=None):
     """Get PyTorch data loader.
 
     Args:
@@ -30,7 +29,7 @@ def get_loader(phase, data_args,
     elif 'valid' in phase:
         models = data_args.models_valid
     elif 'test' in phase:
-        models = data_args.models_test
+        models = test_args.models_test
     else:
         print('Erroneous phase')
         raise
