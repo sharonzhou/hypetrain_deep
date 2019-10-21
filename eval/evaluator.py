@@ -5,7 +5,7 @@ import torch.nn as nn
 from scipy import stats
 import sklearn.metrics as skm
 
-from aihc_stats import classification_metrics as c_metrics
+from stats_lib import classification_metrics as c_metrics
 from constants import *
 
 
