@@ -6,3 +6,5 @@ The goal is to provide image-level labels of human perceptual realism, instead o
 Specifically, the model used was a DenseNet-121. Images used were CelebA and generated faces from StyleGAN, ProGAN, BEGAN, and WGAN-GP, trained on CelebA. The held-out validation and test sets were densely labeled by five human annotators using methodology similar to HYPE.
 
 These scores are then compared with NVIDIA's image-level realism score, which is the most recent score released (though it was not evaluated against human judgment).
+
+NB: A good portion of this code is from the Stanford ML Group's starter repository, which my collaborators and students in that lab and I wrote collaboratively. The remaining contributions for this project are mine.
